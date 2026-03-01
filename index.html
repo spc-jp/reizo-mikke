@@ -1,0 +1,720 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>冷蔵庫みっけ！</title>
+<link href="https://fonts.googleapis.com/css2?family=Zen+Maru+Gothic:wght@400;500;700&family=Kaisei+Opti:wght@400;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --cream:#fdf8f0; --warm-white:#fffdf9; --brown:#5c3d1e; --brown-mid:#7a5230;
+  --brown-light:#a07040; --orange:#e8843a; --orange-light:#f4a96a;
+  --green:#5a8c3f; --green-light:#e8f5df; --yellow:#f5c842; --yellow-light:#fffbe6;
+  --paper:#f7f0e3; --shadow:rgba(92,61,30,0.13); --text:#3d2b14; --text-light:#7a5c38;
+}
+*{box-sizing:border-box;margin:0;padding:0;}
+html,body{height:100%;}
+body{font-family:'Zen Maru Gothic',sans-serif;color:var(--text);background:var(--cream);overflow-x:hidden;font-weight:500;-webkit-font-smoothing:antialiased;}
+
+/* PAGE SYSTEM */
+.page{position:fixed;inset:0;transition:transform 0.55s cubic-bezier(0.77,0,0.175,1),opacity 0.55s ease;overflow-y:auto;}
+#page-top{z-index:10;transform:translateY(0);opacity:1;}
+#page-top.exit{transform:translateY(-100%);opacity:0;pointer-events:none;}
+#page-app{z-index:5;transform:translateY(60px);opacity:0;pointer-events:none;}
+#page-app.active{transform:translateY(0);opacity:1;pointer-events:all;}
+
+/* TOP PAGE */
+#page-top{background:var(--brown);display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:100vh;padding:40px 24px 50px;position:relative;overflow:hidden;}
+#page-top::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse 80% 60% at 50% 0%,rgba(232,132,58,0.18) 0%,transparent 70%),radial-gradient(ellipse 60% 40% at 80% 100%,rgba(245,200,66,0.1) 0%,transparent 60%);}
+#page-top::after{content:'';position:absolute;inset:0;background:repeating-linear-gradient(-55deg,transparent 0px,transparent 18px,rgba(255,255,255,0.018) 18px,rgba(255,255,255,0.018) 19px);}
+
+.float-food{position:absolute;font-size:2rem;opacity:0.13;animation:floatFood 8s ease-in-out infinite;user-select:none;pointer-events:none;}
+.f1{top:8%;left:6%;font-size:2.4rem;animation-delay:0s;animation-duration:7s;}
+.f2{top:14%;right:8%;font-size:1.8rem;animation-delay:1.2s;animation-duration:9s;}
+.f3{top:32%;left:3%;font-size:1.5rem;animation-delay:2.1s;animation-duration:8s;}
+.f4{top:55%;right:5%;font-size:2rem;animation-delay:0.7s;animation-duration:10s;}
+.f5{top:70%;left:8%;font-size:1.6rem;animation-delay:3.3s;animation-duration:7s;}
+.f6{top:80%;right:10%;font-size:2.2rem;animation-delay:1.8s;animation-duration:9s;}
+.f7{top:44%;left:88%;font-size:1.4rem;animation-delay:4.1s;animation-duration:8s;}
+.f8{top:22%;left:45%;font-size:1.2rem;animation-delay:2.8s;animation-duration:11s;}
+@keyframes floatFood{0%,100%{transform:translateY(0) rotate(-5deg);}33%{transform:translateY(-18px) rotate(3deg);}66%{transform:translateY(-8px) rotate(-8deg);}}
+
+.top-logo-area{position:relative;z-index:1;text-align:center;margin-bottom:36px;animation:fadeUp 0.8s ease both;}
+.plate-wrap{position:relative;display:inline-block;margin-bottom:20px;}
+.plate-bg{width:110px;height:110px;background:radial-gradient(circle at 35% 35%,#fff9ef,#f0d9b0);border-radius:50%;box-shadow:0 0 0 8px rgba(245,200,66,0.18),0 0 0 16px rgba(245,200,66,0.08),0 12px 32px rgba(0,0,0,0.25);display:flex;align-items:center;justify-content:center;font-size:3.2rem;margin:0 auto;animation:platePop 1s cubic-bezier(0.34,1.56,0.64,1) 0.2s both;}
+@keyframes platePop{from{transform:scale(0.5) rotate(-15deg);opacity:0;}to{transform:scale(1) rotate(0deg);opacity:1;}}
+.sparkle{position:absolute;font-size:1rem;animation:sparkleSpin 2.5s ease-in-out infinite;}
+.sp1{top:-4px;right:0px;animation-delay:0s;}.sp2{bottom:4px;left:-8px;animation-delay:0.8s;font-size:0.8rem;}.sp3{top:10px;left:-4px;animation-delay:1.5s;font-size:0.7rem;}
+@keyframes sparkleSpin{0%,100%{transform:scale(1) rotate(0deg);opacity:1;}50%{transform:scale(1.4) rotate(20deg);opacity:0.5;}}
+.top-title{font-family:'Kaisei Opti',serif;font-size:2.4rem;color:#fff;letter-spacing:0.06em;line-height:1.1;text-shadow:0 2px 12px rgba(0,0,0,0.3);}
+.top-title em{color:var(--yellow);font-style:normal;}
+.top-subtitle{margin-top:10px;color:rgba(255,255,255,0.75);font-size:0.85rem;line-height:1.7;}
+
+.steps-row{position:relative;z-index:1;display:flex;gap:10px;margin-bottom:36px;width:100%;max-width:360px;}
+.step-chip{flex:1;background:rgba(255,255,255,0.08);border:1px solid rgba(255,255,255,0.15);border-radius:14px;padding:14px 8px 12px;text-align:center;backdrop-filter:blur(4px);animation:fadeUp 0.7s ease both;}
+.step-chip:nth-child(1){animation-delay:0.3s;}.step-chip:nth-child(2){animation-delay:0.45s;}.step-chip:nth-child(3){animation-delay:0.6s;}
+.step-chip .sc-icon{font-size:1.6rem;margin-bottom:6px;}
+.step-chip .sc-num{display:block;font-size:0.6rem;color:var(--yellow);font-weight:700;letter-spacing:0.1em;margin-bottom:2px;}
+.step-chip .sc-label{display:block;font-size:0.78rem;color:#fff;font-weight:700;line-height:1.3;}
+.step-chip .sc-sub{display:block;font-size:0.65rem;color:rgba(255,255,255,0.55);margin-top:3px;}
+.arrow-between{display:flex;align-items:center;color:rgba(255,255,255,0.3);font-size:0.7rem;flex-shrink:0;padding-top:8px;}
+
+.feature-strip{position:relative;z-index:1;display:flex;flex-direction:column;gap:8px;margin-bottom:36px;width:100%;max-width:360px;animation:fadeUp 0.7s ease 0.65s both;}
+.feature-item{display:flex;align-items:center;gap:12px;background:rgba(255,255,255,0.06);border-radius:12px;padding:10px 14px;border:1px solid rgba(255,255,255,0.1);}
+.feature-icon{width:34px;height:34px;background:rgba(245,200,66,0.15);border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:1.1rem;flex-shrink:0;}
+.feature-text strong{display:block;font-size:0.82rem;color:#fff;font-weight:700;}
+.feature-text span{font-size:0.7rem;color:rgba(255,255,255,0.5);}
+
+.btn-start-wrap{position:relative;z-index:1;width:100%;max-width:360px;animation:fadeUp 0.7s ease 0.8s both;}
+.btn-start{width:100%;padding:18px 20px;background:linear-gradient(135deg,var(--yellow) 0%,#f0a020 100%);color:var(--brown);font-family:'Kaisei Opti',serif;font-size:1.25rem;font-weight:700;border:none;border-radius:18px;cursor:pointer;letter-spacing:0.08em;box-shadow:0 6px 24px rgba(245,200,66,0.45),0 2px 0 rgba(0,0,0,0.15) inset;transition:all 0.2s ease;position:relative;overflow:hidden;}
+.btn-start::before{content:'';position:absolute;top:0;left:-100%;width:60%;height:100%;background:linear-gradient(90deg,transparent,rgba(255,255,255,0.3),transparent);animation:shine 3s ease infinite;}
+@keyframes shine{0%{left:-100%;}40%,100%{left:150%;}}
+.btn-start:hover{transform:translateY(-3px);box-shadow:0 10px 30px rgba(245,200,66,0.55);}
+.btn-start .btn-sub{display:block;font-family:'Zen Maru Gothic',sans-serif;font-size:0.7rem;color:rgba(92,61,30,0.65);font-weight:400;margin-top:2px;letter-spacing:0.05em;}
+.top-bottom-note{position:relative;z-index:1;margin-top:20px;font-size:0.7rem;color:rgba(255,255,255,0.35);text-align:center;animation:fadeUp 0.7s ease 1s both;}
+@keyframes fadeUp{from{opacity:0;transform:translateY(20px);}to{opacity:1;transform:translateY(0);}}
+
+/* APP PAGE */
+#page-app{background:var(--cream);background-image:radial-gradient(circle at 15% 20%,rgba(232,132,58,0.06) 0%,transparent 50%),radial-gradient(circle at 85% 80%,rgba(106,140,79,0.06) 0%,transparent 50%);}
+.app-header{background:var(--brown);padding:14px 20px;display:flex;align-items:center;gap:12px;position:sticky;top:0;z-index:100;}
+.btn-back{background:rgba(255,255,255,0.12);border:1px solid rgba(255,255,255,0.2);color:#fff;font-family:'Zen Maru Gothic',sans-serif;font-size:0.8rem;padding:6px 12px;border-radius:20px;cursor:pointer;transition:all 0.15s;flex-shrink:0;}
+.btn-back:hover{background:rgba(255,255,255,0.2);}
+.app-header-title{font-family:'Kaisei Opti',serif;font-size:1.1rem;color:#fff;letter-spacing:0.04em;}
+.app-header-title span{color:var(--yellow);}
+.recipe-count-badge{margin-left:auto;background:rgba(245,200,66,0.2);color:var(--yellow);font-size:0.7rem;font-weight:700;padding:3px 10px;border-radius:20px;border:1px solid rgba(245,200,66,0.3);}
+
+.container{max-width:680px;margin:0 auto;padding:20px 16px 50px;}
+.card{background:var(--warm-white);border-radius:16px;padding:20px;margin-bottom:18px;box-shadow:0 2px 12px var(--shadow);border:1px solid rgba(160,112,64,0.1);}
+.section-title{font-family:'Kaisei Opti',serif;font-size:1rem;color:var(--brown);margin-bottom:14px;display:flex;align-items:center;gap:8px;}
+.section-title::after{content:'';flex:1;height:1px;background:linear-gradient(to right,rgba(160,112,64,0.3),transparent);}
+
+.ingredient-group{margin-bottom:16px;}
+.group-label{font-size:0.72rem;font-weight:700;color:var(--brown-light);letter-spacing:0.08em;margin-bottom:8px;padding:3px 10px;background:var(--paper);border-radius:20px;display:inline-block;}
+.chips{display:flex;flex-wrap:wrap;gap:8px;}
+.chip{display:none;}
+.chip+label{cursor:pointer;padding:7px 14px;border-radius:30px;font-size:0.85rem;border:1.5px solid rgba(160,112,64,0.3);background:var(--warm-white);color:var(--text-light);transition:all 0.18s ease;user-select:none;}
+.chip:checked+label{background:var(--orange);border-color:var(--orange);color:#fff;box-shadow:0 2px 8px rgba(232,132,58,0.35);transform:translateY(-1px);}
+.chip+label:hover{border-color:var(--orange-light);color:var(--brown);}
+
+.selected-count{text-align:center;font-size:0.82rem;color:var(--text-light);margin-bottom:14px;min-height:20px;}
+.selected-count span{color:var(--orange);font-weight:700;font-size:1rem;}
+.btn-search{width:100%;padding:15px;background:linear-gradient(135deg,var(--orange),#d4692a);color:#fff;font-family:'Zen Maru Gothic',sans-serif;font-size:1.05rem;font-weight:700;border:none;border-radius:14px;cursor:pointer;letter-spacing:0.05em;box-shadow:0 4px 14px rgba(232,132,58,0.4);transition:all 0.2s ease;}
+.btn-search:hover{transform:translateY(-2px);box-shadow:0 6px 18px rgba(232,132,58,0.5);}
+.btn-reset{width:100%;padding:10px;background:transparent;color:var(--text-light);font-family:'Zen Maru Gothic',sans-serif;font-size:0.82rem;border:1.5px solid rgba(160,112,64,0.25);border-radius:10px;cursor:pointer;margin-top:10px;transition:all 0.15s;}
+.btn-reset:hover{background:var(--paper);}
+
+#results{display:none;}
+.result-header{font-family:'Kaisei Opti',serif;font-size:1rem;color:var(--brown);margin-bottom:14px;}
+.result-count{color:var(--orange);font-size:1.2rem;font-weight:700;}
+.recipe-card{background:var(--warm-white);border-radius:14px;border:1.5px solid rgba(160,112,64,0.12);margin-bottom:12px;overflow:hidden;box-shadow:0 1px 6px var(--shadow);transition:all 0.18s ease;}
+.recipe-card:hover{transform:translateY(-2px);box-shadow:0 4px 16px var(--shadow);border-color:var(--orange-light);}
+.recipe-header{padding:14px 16px;display:flex;align-items:flex-start;justify-content:space-between;gap:10px;cursor:pointer;}
+.recipe-name{font-size:1.05rem;font-weight:700;color:#2a1a06;margin-bottom:6px;}
+.recipe-badges{display:flex;gap:6px;flex-wrap:wrap;}
+.badge{font-size:0.68rem;font-weight:700;padding:3px 9px;border-radius:20px;white-space:nowrap;}
+.badge-time{background:var(--paper);color:var(--text-light);}
+.badge-d1{background:#e8f5df;color:var(--green);}
+.badge-d2{background:#fff3e0;color:var(--orange);}
+.badge-d3{background:#ffe0e0;color:#c04040;}
+.badge-full{background:#e8f5df;color:var(--green);}
+.badge-part{background:#fff3e0;color:var(--orange);}
+.toggle-hint{font-size:0.7rem;color:var(--text-light);flex-shrink:0;margin-top:4px;}
+.missing-box{margin:0 16px 12px;background:var(--yellow-light);border:1px dashed rgba(200,160,0,0.35);border-radius:10px;padding:10px 14px;font-size:0.88rem;color:#4a3200;font-weight:500;}
+.missing-box strong{color:#2a1a00;font-weight:700;}
+.recipe-detail{display:none;padding:0 16px 16px;border-top:1px dashed rgba(160,112,64,0.2);animation:sd 0.2s ease;}
+.recipe-detail.open{display:block;}
+@keyframes sd{from{opacity:0;transform:translateY(-6px);}to{opacity:1;transform:translateY(0);}}
+.detail-section{margin-top:14px;}
+.detail-label{font-size:0.78rem;font-weight:700;color:var(--orange);letter-spacing:0.08em;margin-bottom:10px;}
+.amounts-table{width:100%;border-collapse:collapse;font-size:0.95rem;}
+.amounts-table tr{border-bottom:1px solid rgba(160,112,64,0.1);}
+.amounts-table tr:last-child{border-bottom:none;}
+.amounts-table td{padding:9px 4px;}
+.amounts-table td.ing-name{color:#2a1a06;font-weight:500;}
+.amounts-table td.ing-qty{color:#5c3d1e;font-weight:700;text-align:right;font-size:1rem;}
+.amounts-table tr.have td.ing-name{color:var(--green);font-weight:700;}
+.amounts-table tr.have td.ing-name::before{content:'✓ ';}
+.steps-list{list-style:none;}
+.step-item{display:flex;gap:12px;margin-bottom:14px;align-items:flex-start;}
+.step-num{display:flex;align-items:center;justify-content:center;min-width:26px;height:26px;background:var(--orange);color:#fff;border-radius:50%;font-size:0.75rem;font-weight:700;flex-shrink:0;margin-top:1px;}
+.step-body{flex:1;}
+.step-text{font-size:1rem;line-height:1.75;color:#2a1a06;font-weight:700;}
+.range-box{display:inline-flex;align-items:center;flex-wrap:wrap;gap:6px;background:#e8eeff;border:1px solid #98b0e8;border-radius:8px;padding:8px 14px;margin-top:8px;font-size:0.88rem;color:#1a3080;font-weight:500;}
+.range-main{font-weight:700;font-size:1rem;color:#0a2070;}
+.range-alt{font-size:0.8rem;color:#3050a0;padding:2px 8px;background:#d0dcff;border-radius:10px;font-weight:500;}
+.tips-box{background:var(--yellow-light);border-left:3px solid var(--yellow);border-radius:0 8px 8px 0;padding:10px 14px;margin-top:8px;font-size:0.88rem;color:#4a3200;line-height:1.7;font-weight:500;}
+.tips-box strong{color:#2a1a00;font-weight:700;}
+.done-box{background:var(--green-light);border:1px solid rgba(90,140,63,0.25);border-radius:10px;padding:10px 14px;margin-top:14px;font-size:0.85rem;color:var(--green);font-weight:700;text-align:center;}
+.no-result{text-align:center;padding:30px 20px;color:var(--text-light);font-size:0.9rem;line-height:1.8;}
+footer{text-align:center;padding:20px;font-size:0.72rem;color:rgba(107,76,42,0.4);}
+</style>
+</head>
+<body>
+
+<!-- TOP PAGE -->
+<div id="page-top" class="page">
+  <div class="float-food f1">🥦</div><div class="float-food f2">🥚</div>
+  <div class="float-food f3">🧅</div><div class="float-food f4">🍳</div>
+  <div class="float-food f5">🥕</div><div class="float-food f6">🐟</div>
+  <div class="float-food f7">🥬</div><div class="float-food f8">🍄</div>
+
+  <div class="top-logo-area">
+    <div class="plate-wrap">
+      <div class="plate-bg">🍽️</div>
+      <span class="sparkle sp1">✨</span><span class="sparkle sp2">⭐</span><span class="sparkle sp3">✦</span>
+    </div>
+    <div class="top-title">冷蔵庫<em>みっけ</em>！</div>
+    <p class="top-subtitle">今ある食材を選ぶだけで<br>今日のごはんが決まる</p>
+  </div>
+
+  <div class="steps-row">
+    <div class="step-chip"><div class="sc-icon">🧺</div><span class="sc-num">STEP 1</span><span class="sc-label">食材を<br>選ぶ</span><span class="sc-sub">タップするだけ</span></div>
+    <div class="arrow-between">▶</div>
+    <div class="step-chip"><div class="sc-icon">🔍</div><span class="sc-num">STEP 2</span><span class="sc-label">レシピを<br>みっけ！</span><span class="sc-sub">自動でマッチング</span></div>
+    <div class="arrow-between">▶</div>
+    <div class="step-chip"><div class="sc-icon">🍳</div><span class="sc-num">STEP 3</span><span class="sc-label">作って<br>食べる</span><span class="sc-sub">分量・手順つき</span></div>
+  </div>
+
+  <div class="feature-strip">
+    <div class="feature-item"><div class="feature-icon">📡</div><div class="feature-text"><strong>レンジ加熱は「W・秒」で明記</strong><span>600W・300秒など、迷わず操作できます</span></div></div>
+    <div class="feature-item"><div class="feature-icon">⭐</div><div class="feature-text"><strong>難易度表示で安心スタート</strong><span>かんたん〜すこし頑張るの3段階</span></div></div>
+    <div class="feature-item"><div class="feature-icon">🍽️</div><div class="feature-text"><strong>60品のレシピから自動マッチング</strong><span>食材3つで5品以上ヒットします</span></div></div>
+  </div>
+
+  <div class="btn-start-wrap">
+    <button class="btn-start" onclick="startApp()">🥦 はじめる<span class="btn-sub">食材を選んでレシピをみっけ！</span></button>
+  </div>
+  <p class="top-bottom-note">登録不要・無料・広告なし　by Smile Plus Consulting</p>
+</div>
+
+<!-- APP PAGE -->
+<div id="page-app" class="page">
+  <div class="app-header">
+    <button class="btn-back" onclick="goTop()">← トップへ</button>
+    <div class="app-header-title">冷蔵庫<span>みっけ</span>！</div>
+    <span class="recipe-count-badge">全60品</span>
+  </div>
+
+  <div class="container">
+    <div class="card">
+      <div class="section-title"><span>🧺</span>冷蔵庫にある食材を選んでね</div>
+
+      <div class="ingredient-group">
+        <div class="group-label">🥚 たまご・乳製品</div>
+        <div class="chips">
+          <input class="chip" type="checkbox" id="i_tamago" value="たまご"><label for="i_tamago">たまご</label>
+          <input class="chip" type="checkbox" id="i_milk" value="牛乳"><label for="i_milk">牛乳</label>
+          <input class="chip" type="checkbox" id="i_butter" value="バター"><label for="i_butter">バター</label>
+          <input class="chip" type="checkbox" id="i_tounyu" value="豆乳"><label for="i_tounyu">豆乳</label>
+        </div>
+      </div>
+
+      <div class="ingredient-group">
+        <div class="group-label">🥩 肉類</div>
+        <div class="chips">
+          <input class="chip" type="checkbox" id="i_torimo" value="鶏もも肉"><label for="i_torimo">鶏もも肉</label>
+          <input class="chip" type="checkbox" id="i_butabara" value="豚バラ"><label for="i_butabara">豚バラ</label>
+          <input class="chip" type="checkbox" id="i_buta" value="豚こま"><label for="i_buta">豚こま</label>
+          <input class="chip" type="checkbox" id="i_hiki" value="豚ひき肉"><label for="i_hiki">豚ひき肉</label>
+          <input class="chip" type="checkbox" id="i_wiener" value="ウインナー"><label for="i_wiener">ウインナー</label>
+        </div>
+      </div>
+
+      <div class="ingredient-group">
+        <div class="group-label">🐟 魚・海鮮・缶詰</div>
+        <div class="chips">
+          <input class="chip" type="checkbox" id="i_tuna" value="ツナ缶"><label for="i_tuna">ツナ缶</label>
+          <input class="chip" type="checkbox" id="i_saba" value="さば缶"><label for="i_saba">さば缶</label>
+          <input class="chip" type="checkbox" id="i_sake" value="鮭"><label for="i_sake">鮭（切り身）</label>
+          <input class="chip" type="checkbox" id="i_chikuwa" value="ちくわ"><label for="i_chikuwa">ちくわ</label>
+          <input class="chip" type="checkbox" id="i_hanpen" value="はんぺん"><label for="i_hanpen">はんぺん</label>
+          <input class="chip" type="checkbox" id="i_ebi" value="えび"><label for="i_ebi">えび</label>
+        </div>
+      </div>
+
+      <div class="ingredient-group">
+        <div class="group-label">🥬 野菜（基本）</div>
+        <div class="chips">
+          <input class="chip" type="checkbox" id="i_tamanegi" value="玉ねぎ"><label for="i_tamanegi">玉ねぎ</label>
+          <input class="chip" type="checkbox" id="i_jagaimo" value="じゃがいも"><label for="i_jagaimo">じゃがいも</label>
+          <input class="chip" type="checkbox" id="i_kyabetu" value="キャベツ"><label for="i_kyabetu">キャベツ</label>
+          <input class="chip" type="checkbox" id="i_daikon" value="大根"><label for="i_daikon">大根</label>
+          <input class="chip" type="checkbox" id="i_ninjin" value="にんじん"><label for="i_ninjin">にんじん</label>
+          <input class="chip" type="checkbox" id="i_moyashi" value="もやし"><label for="i_moyashi">もやし</label>
+          <input class="chip" type="checkbox" id="i_negi" value="ねぎ"><label for="i_negi">ねぎ</label>
+          <input class="chip" type="checkbox" id="i_lettuce" value="レタス"><label for="i_lettuce">レタス</label>
+        </div>
+      </div>
+
+      <div class="ingredient-group">
+        <div class="group-label">🥦 野菜（追加）</div>
+        <div class="chips">
+          <input class="chip" type="checkbox" id="i_horenso" value="ほうれん草"><label for="i_horenso">ほうれん草</label>
+          <input class="chip" type="checkbox" id="i_broccoli" value="ブロッコリー"><label for="i_broccoli">ブロッコリー</label>
+          <input class="chip" type="checkbox" id="i_nasu" value="なす"><label for="i_nasu">なす</label>
+          <input class="chip" type="checkbox" id="i_piman" value="ピーマン"><label for="i_piman">ピーマン</label>
+          <input class="chip" type="checkbox" id="i_kinoko" value="きのこ"><label for="i_kinoko">きのこ</label>
+        </div>
+      </div>
+
+      <div class="ingredient-group">
+        <div class="group-label">🥣 豆腐・乾物</div>
+        <div class="chips">
+          <input class="chip" type="checkbox" id="i_tofu" value="豆腐"><label for="i_tofu">豆腐</label>
+          <input class="chip" type="checkbox" id="i_atsuage" value="厚揚げ"><label for="i_atsuage">厚揚げ</label>
+          <input class="chip" type="checkbox" id="i_wakame" value="わかめ"><label for="i_wakame">わかめ</label>
+        </div>
+      </div>
+
+      <div class="ingredient-group">
+        <div class="group-label">🍚 主食</div>
+        <div class="chips">
+          <input class="chip" type="checkbox" id="i_gohan" value="ごはん"><label for="i_gohan">ごはん</label>
+          <input class="chip" type="checkbox" id="i_pan" value="食パン"><label for="i_pan">食パン</label>
+          <input class="chip" type="checkbox" id="i_pasta" value="パスタ"><label for="i_pasta">パスタ</label>
+        </div>
+      </div>
+
+      <div class="ingredient-group">
+        <div class="group-label">🧂 調味料</div>
+        <div class="chips">
+          <input class="chip" type="checkbox" id="i_mentsuyu" value="めんつゆ"><label for="i_mentsuyu">めんつゆ</label>
+          <input class="chip" type="checkbox" id="i_miso" value="味噌"><label for="i_miso">味噌</label>
+          <input class="chip" type="checkbox" id="i_shoyu" value="しょうゆ"><label for="i_shoyu">しょうゆ</label>
+          <input class="chip" type="checkbox" id="i_gomaabura" value="ごま油"><label for="i_gomaabura">ごま油</label>
+          <input class="chip" type="checkbox" id="i_tobanjan" value="豆板醤"><label for="i_tobanjan">豆板醤</label>
+          <input class="chip" type="checkbox" id="i_konsomme" value="コンソメ"><label for="i_konsomme">コンソメ</label>
+          <input class="chip" type="checkbox" id="i_shiokonbu" value="塩昆布"><label for="i_shiokonbu">塩昆布</label>
+          <input class="chip" type="checkbox" id="i_mayo" value="マヨネーズ"><label for="i_mayo">マヨネーズ</label>
+          <input class="chip" type="checkbox" id="i_ketchup" value="ケチャップ"><label for="i_ketchup">ケチャップ</label>
+          <input class="chip" type="checkbox" id="i_curry" value="カレー粉"><label for="i_curry">カレー粉</label>
+          <input class="chip" type="checkbox" id="i_tomato" value="トマト缶"><label for="i_tomato">トマト缶</label>
+        </div>
+      </div>
+
+      <div class="selected-count" id="selected-count">食材をタップして選んでね🥕</div>
+      <button class="btn-search" onclick="search()">🔍 レシピをみっけ！</button>
+      <button class="btn-reset" onclick="reset()">✕ 選択をリセット</button>
+    </div>
+
+    <div id="results">
+      <div class="result-header" id="result-header"></div>
+      <div id="recipe-list"></div>
+    </div>
+  </div>
+  <footer>冷蔵庫みっけ！ by Smile Plus Consulting</footer>
+</div>
+
+<script>
+const DIFF={1:{label:"⭐ かんたん",cls:"badge-d1"},2:{label:"⭐⭐ ふつう",cls:"badge-d2"},3:{label:"⭐⭐⭐ 頑張る",cls:"badge-d3"}};
+
+const RECIPES=[
+  // ─── たまご系 ───
+  {id:1,name:"たまごとじ丼",time:"10分",diff:1,ingredients:["たまご","玉ねぎ","めんつゆ","ごはん"],
+   amounts:[{n:"たまご",q:"2個",m:true},{n:"玉ねぎ",q:"1/2個",m:true},{n:"めんつゆ",q:"大さじ3",m:true},{n:"水",q:"100ml"},{n:"ごはん",q:"2膳",m:true}],
+   steps:[{t:"玉ねぎを薄切り（3〜4mm）にして小鍋に入れ、水100mlとめんつゆを加えて中火にかける",tip:null},{t:"玉ねぎが透き通ってきたら溶きたまごをゆっくり回し入れる",tip:"たまごは箸で細く流しながら入れると半熟になりやすい"},{t:"たまごが8割ほど固まったら火を止め、ごはんの上にのせて完成",tip:"余熱で固まるので少し早めに止めるのがポイント"}],
+   done:"シンプルなのに味が決まる！はじめての丼にぴったりです🍚"},
+
+  {id:2,name:"スクランブルエッグトースト",time:"8分",diff:1,ingredients:["たまご","牛乳","食パン","バター"],
+   amounts:[{n:"たまご",q:"2個",m:true},{n:"牛乳",q:"大さじ2",m:true},{n:"バター",q:"5g",m:true},{n:"食パン",q:"2枚",m:true},{n:"塩",q:"ひとつまみ"}],
+   steps:[{t:"ボウルにたまご・牛乳・塩を入れてよく混ぜる",tip:"牛乳を加えるとふわふわに仕上がります"},{t:"食パンをトースターで2〜3分焼いておく",tip:null},{t:"フライパンにバターを溶かし弱火で卵液をゆっくり混ぜながら炒める。半熟でトーストにのせて完成",tip:"弱火でゆっくりが鉄則！強火だとパサパサになります"}],
+   done:"朝ごはんにぴったり！上手に作れましたか？☕"},
+
+  {id:3,name:"卵かけごはん（TKG）",time:"2分",diff:1,ingredients:["たまご","ごはん","しょうゆ"],
+   amounts:[{n:"たまご",q:"1〜2個",m:true},{n:"ごはん",q:"1膳",m:true},{n:"しょうゆ",q:"小さじ1",m:true}],
+   steps:[{t:"ごはんを茶碗によそう",tip:"温かいごはんが断然おいしいです"},{t:"たまごを割り入れてしょうゆをかける",tip:null},{t:"よく混ぜて完成",tip:"白身と黄身をよく混ぜてから白いごはんに絡めると全体が絡まっておいしい"}],
+   done:"最速ごはん完成！シンプルが一番ですね🥚"},
+
+  {id:4,name:"フレンチトースト",time:"12分",diff:1,ingredients:["たまご","牛乳","食パン","バター"],
+   amounts:[{n:"たまご",q:"2個",m:true},{n:"牛乳",q:"100ml",m:true},{n:"砂糖",q:"大さじ1"},{n:"食パン",q:"2枚",m:true},{n:"バター",q:"10g",m:true}],
+   steps:[{t:"たまご・牛乳・砂糖を混ぜ合わせ、食パンを両面浸して10分ほど置く",tip:"しっかり浸すほどふわふわになります"},{t:"フライパンにバターを溶かして中火で両面を焼く（片面2〜3分）",tip:"焼き色がついたらひっくり返すタイミングです"},{t:"きつね色になったら完成",tip:null}],
+   done:"ふわとろフレンチトースト！甘くていい香りですね🍞"},
+
+  {id:5,name:"半熟煮たまご",time:"15分+漬け時間",diff:1,ingredients:["たまご","しょうゆ"],
+   amounts:[{n:"たまご",q:"4個",m:true},{n:"しょうゆ",q:"大さじ3",m:true},{n:"みりん",q:"大さじ2"},{n:"水",q:"100ml"}],
+   steps:[{t:"沸騰したお湯にたまごをお玉でそっと入れて7分ゆでる",tip:"タイマーをセットしてぴったり計るのがコツ"},{t:"すぐ冷水にとり3分冷やして殻をむく",tip:"冷やすことで殻がむきやすくなります"},{t:"しょうゆ・みりん・水を合わせたタレに30分以上漬けて完成",tip:"ジッパー袋で漬けると少ないタレでもしっかり味がつきます"}],
+   done:"ラーメンにのせたら最高！冷蔵で3日保存できます🥚"},
+
+  // ─── じゃがいも系 ───
+  {id:6,name:"じゃがバター",time:"8分",diff:1,ingredients:["じゃがいも","バター"],
+   amounts:[{n:"じゃがいも",q:"2個",m:true},{n:"バター",q:"10g",m:true},{n:"塩",q:"少々"}],
+   steps:[{t:"じゃがいもをよく洗い、濡れたままラップでぴったり包む",tip:"濡らすことで蒸し焼き効果が出てふっくら仕上がります"},{t:"電子レンジで加熱する",r:{w600:"5分（300秒）",w500:"6分（360秒）"},tip:"竹串がスッと通れば完成。硬ければ追加で1分加熱"},{t:"半分に切ってバターをのせ、塩をふって完成",tip:null}],
+   done:"シンプルなのにおいしい！ほっこりしますね🧈"},
+
+  {id:7,name:"ポテトサラダ",time:"15分",diff:1,ingredients:["じゃがいも","たまご","マヨネーズ"],
+   amounts:[{n:"じゃがいも",q:"2個",m:true},{n:"たまご",q:"1個",m:true},{n:"マヨネーズ",q:"大さじ3",m:true},{n:"塩",q:"小さじ1/4"}],
+   steps:[{t:"じゃがいもをラップで包んで電子レンジで加熱",r:{w600:"5分（300秒）",w500:"6分（360秒）"},tip:"竹串がスッと通ればOK"},{t:"たまごを沸騰したお湯で10分固ゆでにし、冷水で冷やして刻む",tip:null},{t:"じゃがいもを熱いうちにつぶし、たまご・マヨネーズ・塩で和えて完成",tip:"粗めにつぶすと食感が出ておいしいです"}],
+   done:"手作りポテサラは格別！冷ますとさらにおいしくなります🥔"},
+
+  {id:8,name:"じゃがいもとウインナーの炒め物",time:"12分",diff:1,ingredients:["じゃがいも","ウインナー","玉ねぎ"],
+   amounts:[{n:"じゃがいも",q:"1個",m:true},{n:"ウインナー",q:"4本",m:true},{n:"玉ねぎ",q:"1/4個",m:true},{n:"塩こしょう",q:"少々"},{n:"油",q:"小さじ1"}],
+   steps:[{t:"じゃがいもを薄切り（5mm）にしてラップで電子レンジ加熱",r:{w600:"3分（180秒）",w500:"3分半（210秒）"},tip:"薄切りで短時間で火が通ります"},{t:"ウインナーと玉ねぎを油で炒める",tip:null},{t:"じゃがいもを加えて炒め、塩こしょうで味付けして完成",tip:"じゃがいもが少し色づくと香ばしくておいしい"}],
+   done:"子どもも大人も大好き！お弁当にもなりますね🌭"},
+
+  // ─── 豆腐系 ───
+  {id:9,name:"冷や奴",time:"3分",diff:1,ingredients:["豆腐","しょうゆ","ねぎ"],
+   amounts:[{n:"豆腐",q:"1丁",m:true},{n:"しょうゆ",q:"小さじ2",m:true},{n:"ねぎ",q:"大さじ1",m:true},{n:"かつおぶし",q:"ひとつかみ"}],
+   steps:[{t:"豆腐をキッチンペーパーで軽く水気をとる",tip:"水気をとるとしょうゆが薄まらず味がしっかりします"},{t:"食べやすい大きさに切って器に盛り、ねぎとかつおぶしをのせる",tip:null},{t:"食べる直前にしょうゆをかけて完成",tip:null}],
+   done:"包丁一つで最速レシピ！お疲れのときにどうぞ🫛"},
+
+  {id:10,name:"豆腐の味噌汁",time:"8分",diff:1,ingredients:["豆腐","わかめ","味噌"],
+   amounts:[{n:"豆腐",q:"1/2丁",m:true},{n:"わかめ（乾燥）",q:"小さじ1",m:true},{n:"味噌",q:"大さじ1.5",m:true},{n:"水",q:"400ml（2杯分）"}],
+   steps:[{t:"鍋に水を入れて中火にかけ、わかめを戻す（2分）",tip:null},{t:"豆腐を2cm角に切って加え、煮立てる",tip:"豆腐は崩れやすいので優しく入れましょう"},{t:"沸騰直前に火を弱め、味噌を溶き入れて完成",tip:"味噌は沸騰させると風味が飛ぶので火を弱めてから溶くのがコツ"}],
+   done:"ほっとする味！毎日飲みたくなりますね🍜"},
+
+  {id:11,name:"麻婆豆腐（簡単版）",time:"12分",diff:2,ingredients:["豆腐","豚ひき肉","豆板醤","しょうゆ"],
+   amounts:[{n:"豆腐",q:"1丁",m:true},{n:"豚ひき肉",q:"100g",m:true},{n:"豆板醤",q:"小さじ1",m:true},{n:"しょうゆ",q:"大さじ1",m:true},{n:"鶏がらスープ",q:"100ml"},{n:"片栗粉",q:"小さじ1（水小さじ2で溶く）"}],
+   steps:[{t:"フライパンにひき肉と豆板醤を中火で炒める（2〜3分）",tip:"豆板醤は油に溶け出すと旨みが増します"},{t:"スープとしょうゆを加えて煮立て、2cm角の豆腐を加える",tip:"鍋を揺すって混ぜると豆腐が崩れにくい"},{t:"弱火にして水溶き片栗粉でとろみをつけて完成",tip:"片栗粉は入れる直前によく混ぜてから加えましょう"}],
+   done:"本格的な味！これは自慢できますよ🌶️"},
+
+  {id:12,name:"豆腐チャンプルー",time:"10分",diff:2,ingredients:["豆腐","たまご","ごま油","しょうゆ"],
+   amounts:[{n:"豆腐",q:"1丁",m:true},{n:"たまご",q:"2個",m:true},{n:"ごま油",q:"小さじ1",m:true},{n:"しょうゆ",q:"大さじ1",m:true},{n:"塩こしょう",q:"少々"}],
+   steps:[{t:"豆腐をキッチンペーパーで包み、重しをのせて10分水切りする",tip:"しっかり水切りすると崩れにくくなります"},{t:"フライパンにごま油を熱し豆腐を手でちぎりながら入れ、中火で焼き色をつける",tip:"あまり動かさずに焼くと崩れません"},{t:"溶きたまごを流し入れ、半熟になったらしょうゆで味付けして完成",tip:null}],
+   done:"沖縄の定番！シンプルで栄養もバッチリですね😊"},
+
+  // ─── キャベツ・野菜系 ───
+  {id:13,name:"塩昆布キャベツ",time:"5分",diff:1,ingredients:["キャベツ","塩昆布","ごま油"],
+   amounts:[{n:"キャベツ",q:"1/4個",m:true},{n:"塩昆布",q:"大さじ1（約6g）",m:true},{n:"ごま油",q:"小さじ1",m:true}],
+   steps:[{t:"キャベツをざく切りにしてボウルに入れる",tip:"手でちぎってもOK！大きめが食感よし"},{t:"塩昆布とごま油を加えてよく混ぜる",tip:null},{t:"10分置いて味をなじませたら完成",tip:"置くほど塩昆布の旨みがしみ込みます"}],
+   done:"包丁不要で5分！お箸が止まらなくなりますよ🥬"},
+
+  {id:14,name:"野菜炒め",time:"10分",diff:1,ingredients:["キャベツ","もやし","豚こま"],
+   amounts:[{n:"キャベツ",q:"1/4個",m:true},{n:"もやし",q:"1袋（200g）",m:true},{n:"豚こま",q:"100g",m:true},{n:"塩こしょう",q:"少々"},{n:"しょうゆ",q:"小さじ1"},{n:"油",q:"小さじ1"}],
+   steps:[{t:"キャベツをざく切りに、豚こまに塩こしょうをもみ込む",tip:null},{t:"強火で熱したフライパンで豚こまを炒める（2分）",tip:"動かさずに置くと焼き色がついておいしい"},{t:"キャベツともやしを加えて強火でさっと炒め、しょうゆを端から回し入れて完成",tip:"強火＋短時間がシャキシャキの秘訣！"}],
+   done:"シャキシャキ感が命！上手に作れましたか？🥢"},
+
+  {id:15,name:"ほうれん草のおひたし",time:"8分",diff:1,ingredients:["ほうれん草","しょうゆ","ごま油"],
+   amounts:[{n:"ほうれん草",q:"1袋（200g）",m:true},{n:"しょうゆ",q:"大さじ1",m:true},{n:"ごま油",q:"小さじ1",m:true},{n:"白ごま",q:"適量"}],
+   steps:[{t:"ほうれん草を沸騰したお湯で1〜2分ゆでる",tip:"根元から入れて20秒後に葉全体を沈めます"},{t:"冷水にとって色止めし、水気をよく絞って3〜4cm幅に切る",tip:"しっかり絞らないとべちゃっとなります"},{t:"しょうゆとごま油で和え、ごまをふって完成",tip:null}],
+   done:"彩りも栄養もバッチリ！副菜の定番ですね🌿"},
+
+  {id:16,name:"ほうれん草とたまごの炒め物",time:"8分",diff:1,ingredients:["ほうれん草","たまご","しょうゆ"],
+   amounts:[{n:"ほうれん草",q:"1袋（200g）",m:true},{n:"たまご",q:"2個",m:true},{n:"しょうゆ",q:"小さじ1",m:true},{n:"塩こしょう",q:"少々"},{n:"油",q:"小さじ1"}],
+   steps:[{t:"ほうれん草を3〜4cm幅に切る。フライパンに油を熱し炒める（1分）",tip:null},{t:"溶きたまごを流し入れ、大きく混ぜながら半熟に仕上げる",tip:"たまごは半熟で止めるとふわふわに"},{t:"しょうゆ・塩こしょうで味付けして完成",tip:null}],
+   done:"緑と黄色が鮮やか！栄養満点の一品ですね🥬"},
+
+  {id:17,name:"ブロッコリーとツナのサラダ",time:"10分",diff:1,ingredients:["ブロッコリー","ツナ缶","マヨネーズ"],
+   amounts:[{n:"ブロッコリー",q:"1/2株",m:true},{n:"ツナ缶",q:"1個（70g）",m:true},{n:"マヨネーズ",q:"大さじ2",m:true},{n:"塩",q:"少々"}],
+   steps:[{t:"ブロッコリーを小房に分け、沸騰したお湯で2〜3分ゆでる",tip:"少し歯ごたえが残るくらいで引き上げると食感よし"},{t:"冷水にとって冷まし、水気をしっかり切る",tip:null},{t:"油を切ったツナとマヨネーズで和えて塩で味を調えて完成",tip:null}],
+   done:"ボリュームたっぷり！お弁当のおかずにも最高ですね🥦"},
+
+  {id:18,name:"なすの味噌炒め",time:"10分",diff:1,ingredients:["なす","味噌","ごま油"],
+   amounts:[{n:"なす",q:"2本",m:true},{n:"味噌",q:"大さじ1.5",m:true},{n:"ごま油",q:"小さじ1",m:true},{n:"みりん",q:"大さじ1"},{n:"砂糖",q:"小さじ1"},{n:"油",q:"大さじ1"}],
+   steps:[{t:"なすを1cm幅の輪切りまたは乱切りにして油で中火で炒める（3〜4分）",tip:"なすは油を吸いやすいので多めの油で炒めます"},{t:"味噌・みりん・砂糖を混ぜ合わせたタレを加えてからめる",tip:null},{t:"全体に絡まったらごま油を回し入れて完成",tip:"最後にごま油を入れると香りがぐっとよくなります"}],
+   done:"なすがとろっとして甘辛タレが絶品！ごはんが進みますね🍆"},
+
+  {id:19,name:"なすのめんつゆ煮びたし",time:"12分",diff:1,ingredients:["なす","めんつゆ"],
+   amounts:[{n:"なす",q:"3本",m:true},{n:"めんつゆ（2倍濃縮）",q:"大さじ3",m:true},{n:"水",q:"200ml"},{n:"油",q:"大さじ1"}],
+   steps:[{t:"なすを乱切りにして油で全面を中火で炒める（3〜4分）",tip:"皮面を先に焼くと色がきれいです"},{t:"水とめんつゆを加えて中火で5分煮る",tip:null},{t:"冷ますと味がしみ込んでさらにおいしくなります",tip:"翌日食べるのがおすすめ！"}],
+   done:"やさしい味で体がほっとします。冷やしてもおいしいですよ🍆"},
+
+  {id:20,name:"ピーマンとウインナーの炒め物",time:"8分",diff:1,ingredients:["ピーマン","ウインナー","しょうゆ"],
+   amounts:[{n:"ピーマン",q:"3個",m:true},{n:"ウインナー",q:"4本",m:true},{n:"しょうゆ",q:"小さじ1",m:true},{n:"塩こしょう",q:"少々"},{n:"油",q:"小さじ1"}],
+   steps:[{t:"ピーマンを細切りに、ウインナーを斜め切りにする",tip:null},{t:"フライパンに油を熱してウインナーを炒め、焼き色がついたらピーマンを加える",tip:"ウインナーを先に炒めると旨みが出ます"},{t:"ピーマンがしんなりしたらしょうゆ・塩こしょうで味付けして完成",tip:null}],
+   done:"彩りよくてお弁当にぴったり！ピーマンが苦手な人も食べやすいですよ🫑"},
+
+  {id:21,name:"きのこのバター醤油炒め",time:"8分",diff:1,ingredients:["きのこ","バター","しょうゆ"],
+   amounts:[{n:"きのこ（しめじ・えのきなど）",q:"200g",m:true},{n:"バター",q:"10g",m:true},{n:"しょうゆ",q:"大さじ1",m:true}],
+   steps:[{t:"きのこを食べやすい大きさにほぐす（しめじは石づきをとって小房に）",tip:null},{t:"フライパンにバターを溶かして中火できのこを炒める（3〜4分）",tip:"最初は触らずに焼き色をつけると香ばしくなります"},{t:"しんなりしたらしょうゆを端から回し入れて完成",tip:null}],
+   done:"きのこの旨みとバターの香りが最高！何にでも合う一品ですね🍄"},
+
+  // ─── 魚・海鮮系 ───
+  {id:22,name:"さば缶と大根の煮物",time:"15分",diff:1,ingredients:["さば缶","大根","しょうゆ"],
+   amounts:[{n:"さば缶（味噌煮または水煮）",q:"1缶",m:true},{n:"大根",q:"1/4本",m:true},{n:"しょうゆ",q:"大さじ1",m:true},{n:"みりん",q:"大さじ1"},{n:"水",q:"100ml"}],
+   steps:[{t:"大根を2cm厚の輪切りにしてラップで包んで電子レンジ加熱",r:{w600:"4分（240秒）",w500:"5分（300秒）"},tip:"レンジで下処理すると煮込み時間が大幅短縮"},{t:"鍋に大根・さば缶を汁ごと入れ、しょうゆ・みりん・水を加えて中火で煮る（8〜10分）",tip:"さば缶の汁は旨みたっぷりなので捨てないで！"},{t:"汁気が少なくなったら完成",tip:null}],
+   done:"さば缶で本格煮物！コスパ最強レシピですね🐟"},
+
+  {id:23,name:"さば缶の味噌汁",time:"8分",diff:1,ingredients:["さば缶","味噌"],
+   amounts:[{n:"さば缶（水煮）",q:"1缶",m:true},{n:"味噌",q:"大さじ1.5",m:true},{n:"水",q:"400ml"},{n:"ねぎ",q:"適量"}],
+   steps:[{t:"鍋に水を入れて沸かし、さば缶を汁ごと加える",tip:"さば缶の汁はだし代わりになります"},{t:"沸騰したら味噌を溶き入れる",tip:"沸騰させると風味が飛ぶので気をつけて"},{t:"ねぎを散らして完成",tip:null}],
+   done:"だしなしでもおいしい！さば缶のうま味がすごいですね🍜"},
+
+  {id:24,name:"鮭のバター醤油ソテー",time:"12分",diff:2,ingredients:["鮭","バター","しょうゆ"],
+   amounts:[{n:"鮭（切り身）",q:"2切れ",m:true},{n:"バター",q:"10g",m:true},{n:"しょうゆ",q:"小さじ2",m:true},{n:"塩こしょう",q:"少々"}],
+   steps:[{t:"鮭に塩こしょうをふって5分置き、キッチンペーパーで水気をふく",tip:"水気をとることで皮がパリッと焼けます"},{t:"フライパンを熱してバターを溶かし、皮目を下にして中火で4〜5分焼く",tip:"蓋をして焼くと中までしっかり火が通ります"},{t:"ひっくり返して3分焼き、しょうゆを回し入れて完成",tip:"しょうゆがジュっとなる瞬間が香ばしくて最高！"}],
+   done:"ふっくらジューシーな鮭！ごはんにぴったりですね🎣"},
+
+  {id:25,name:"ちくわとキャベツの炒め物",time:"8分",diff:1,ingredients:["ちくわ","キャベツ","しょうゆ"],
+   amounts:[{n:"ちくわ",q:"3〜4本",m:true},{n:"キャベツ",q:"1/4個",m:true},{n:"しょうゆ",q:"小さじ1",m:true},{n:"ごま油",q:"小さじ1"},{n:"油",q:"小さじ1"}],
+   steps:[{t:"ちくわを斜め切り（1cm幅）に、キャベツをざく切りにする",tip:null},{t:"フライパンに油を熱してちくわを炒め、焼き色がついたらキャベツを加える",tip:"ちくわは焼き色をつけると香ばしくなります"},{t:"キャベツがしんなりしたらしょうゆ・ごま油で味付けして完成",tip:null}],
+   done:"ちくわで満足感アップ！コスパ最強の一品ですね🌮"},
+
+  {id:26,name:"ちくわのマヨ炒め",time:"5分",diff:1,ingredients:["ちくわ","マヨネーズ","しょうゆ"],
+   amounts:[{n:"ちくわ",q:"4本",m:true},{n:"マヨネーズ",q:"大さじ1",m:true},{n:"しょうゆ",q:"小さじ1",m:true}],
+   steps:[{t:"ちくわを斜め切りにする",tip:null},{t:"フライパンにマヨネーズを入れて中火で加熱し、ちくわを炒める",tip:"マヨネーズを油代わりに使うのがポイント"},{t:"焼き色がついたらしょうゆを加えて完成",tip:null}],
+   done:"5分で完成！おつまみにも子どものおやつにもなりますね😊"},
+
+  {id:27,name:"はんぺんのバター焼き",time:"5分",diff:1,ingredients:["はんぺん","バター","しょうゆ"],
+   amounts:[{n:"はんぺん",q:"1枚（110g）",m:true},{n:"バター",q:"5g",m:true},{n:"しょうゆ",q:"小さじ1",m:true}],
+   steps:[{t:"はんぺんを三角形や四角形に切る（厚さはそのままでOK）",tip:null},{t:"フライパンにバターを溶かして中火で両面を焼く（各1〜2分）",tip:"焼きすぎると縮むので手早く"},{t:"焼き色がついたらしょうゆを回しかけて完成",tip:null}],
+   done:"外はカリッ中はふわふわ！あっという間に完成ですね😋"},
+
+  {id:28,name:"えびとブロッコリーの炒め物",time:"12分",diff:2,ingredients:["えび","ブロッコリー","しょうゆ"],
+   amounts:[{n:"えび",q:"150g",m:true},{n:"ブロッコリー",q:"1/2株",m:true},{n:"しょうゆ",q:"大さじ1",m:true},{n:"にんにくチューブ",q:"1cm"},{n:"油",q:"大さじ1"}],
+   steps:[{t:"えびは背わたを取って塩（少々）でもみ洗いし、ブロッコリーは小房に分けて電子レンジ加熱",r:{w600:"2分（120秒）",w500:"2分半（150秒）"},tip:"えびはしっかり洗うと臭みが取れます"},{t:"フライパンに油とにんにくを入れて中火にかけ、えびを炒める（2〜3分）",tip:"えびが赤くなったら火が通っています"},{t:"ブロッコリーを加えてさっと炒め、しょうゆで味付けして完成",tip:null}],
+   done:"見た目も豪華！ごちそう感たっぷりですね🦐"},
+
+  // ─── スープ系 ───
+  {id:29,name:"オニオンスープ",time:"20分",diff:1,ingredients:["玉ねぎ","コンソメ","バター"],
+   amounts:[{n:"玉ねぎ",q:"1個",m:true},{n:"バター",q:"10g",m:true},{n:"コンソメ",q:"1個",m:true},{n:"水",q:"400ml"},{n:"塩こしょう",q:"少々"}],
+   steps:[{t:"玉ねぎを薄切り（3mm）にする",tip:"繊維に沿って切ると甘みが出やすくなります"},{t:"鍋にバターを溶かし中火で玉ねぎを飴色になるまで10〜12分炒め続ける",tip:"ここをじっくり炒めることが甘いスープの決め手！"},{t:"水とコンソメを加えて弱火で10分煮て、塩こしょうで味を調えて完成",tip:null}],
+   done:"玉ねぎ1個で本格スープ！寒い日に最高ですね✨"},
+
+  {id:30,name:"豆乳スープ",time:"10分",diff:1,ingredients:["豆乳","コンソメ","玉ねぎ"],
+   amounts:[{n:"豆乳（無調整）",q:"300ml",m:true},{n:"コンソメ",q:"1個",m:true},{n:"玉ねぎ",q:"1/4個",m:true},{n:"バター",q:"5g"},{n:"塩こしょう",q:"少々"}],
+   steps:[{t:"玉ねぎを薄切りにしてバターで2〜3分炒める",tip:null},{t:"水100mlとコンソメを加えて2分煮る",tip:null},{t:"豆乳を加えて沸騰させないよう弱火で温め、塩こしょうで味付けして完成",tip:"豆乳は沸騰させると分離するので弱火でゆっくり温めて"}],
+   done:"やさしい甘さのスープ！体が温まりますね🥛"},
+
+  {id:31,name:"トマトスープ",time:"15分",diff:1,ingredients:["トマト缶","コンソメ","玉ねぎ"],
+   amounts:[{n:"トマト缶（カット）",q:"1缶（400g）",m:true},{n:"コンソメ",q:"1個",m:true},{n:"玉ねぎ",q:"1/2個",m:true},{n:"バター",q:"5g"},{n:"塩こしょう",q:"少々"}],
+   steps:[{t:"玉ねぎを薄切りにしてバターで3〜4分炒める",tip:null},{t:"トマト缶・水200ml・コンソメを加えて中火で10分煮る",tip:"沸騰したら弱火にして煮込むと酸味がやわらぎます"},{t:"塩こしょうで味を調えて完成",tip:null}],
+   done:"リコピン豊富で体にいい！ちょっとおしゃれなスープですね🍅"},
+
+  {id:32,name:"きのこのコンソメスープ",time:"10分",diff:1,ingredients:["きのこ","コンソメ","バター"],
+   amounts:[{n:"きのこ",q:"200g",m:true},{n:"コンソメ",q:"1個",m:true},{n:"バター",q:"5g",m:true},{n:"水",q:"400ml"},{n:"塩こしょう",q:"少々"}],
+   steps:[{t:"きのこを食べやすくほぐす",tip:null},{t:"鍋にバターを溶かしきのこを中火で炒める（2分）",tip:"炒めることで旨みが増します"},{t:"水とコンソメを加えて5分煮て、塩こしょうで味を調えて完成",tip:null}],
+   done:"きのこの旨みが溶け出た絶品スープ！低カロリーも嬉しいですね🍄"},
+
+  {id:33,name:"キャベツとウインナーのコンソメスープ",time:"10分",diff:1,ingredients:["キャベツ","ウインナー","コンソメ"],
+   amounts:[{n:"キャベツ",q:"1/4個",m:true},{n:"ウインナー",q:"4本",m:true},{n:"コンソメ",q:"1個",m:true},{n:"水",q:"400ml"},{n:"塩こしょう",q:"少々"}],
+   steps:[{t:"キャベツをざく切りに、ウインナーを斜め切りにする",tip:null},{t:"鍋に水とコンソメを入れて沸かし、ウインナーとキャベツを入れて7〜8分煮る",tip:null},{t:"キャベツが柔らかくなったら塩こしょうで味を調えて完成",tip:"ウインナーから塩気が出るので味見してから調整を"}],
+   done:"具だくさんで満足感あり！朝ごはんにもぴったりですね🥣"},
+
+  {id:34,name:"けんちん汁",time:"20分",diff:2,ingredients:["大根","にんじん","豆腐","しょうゆ","味噌","ごま油"],
+   amounts:[{n:"大根",q:"1/4本",m:true},{n:"にんじん",q:"1/2本",m:true},{n:"豆腐",q:"1/2丁",m:true},{n:"しょうゆ",q:"大さじ1",m:true},{n:"味噌",q:"大さじ1",m:true},{n:"ごま油",q:"小さじ1",m:true},{n:"水",q:"600ml"}],
+   steps:[{t:"大根とにんじんを1.5cm角に切り、ごま油で3〜4分炒める",tip:"油で炒めてから煮ると野菜の旨みが引き出されます"},{t:"水を加えて蓋をして中火で10分煮る",tip:"竹串がスッと通れば煮えています"},{t:"豆腐を崩しながら加え、しょうゆと味噌で味付けして完成",tip:"味噌は沸騰前に加えること！"}],
+   done:"具だくさんで栄養満点！体の芯から温まりますね🍲"},
+
+  // ─── 主食系 ───
+  {id:35,name:"チャーハン",time:"10分",diff:2,ingredients:["ごはん","たまご","ねぎ","しょうゆ"],
+   amounts:[{n:"ごはん（冷やごはん推奨）",q:"2膳",m:true},{n:"たまご",q:"2個",m:true},{n:"ねぎ",q:"大さじ2",m:true},{n:"しょうゆ",q:"大さじ1",m:true},{n:"塩こしょう",q:"少々"},{n:"油",q:"大さじ1"}],
+   steps:[{t:"冷やごはんをレンジで温める",r:{w600:"2分（120秒）",w500:"2分半（150秒）"},tip:"温かいごはんの方がパラパラになります"},{t:"フライパンを強火でしっかり熱して油を入れ、溶きたまごを流し込んですぐごはんを加える",tip:"強火＋熱したフライパンがパラパラの秘訣！"},{t:"ごはんをほぐしながら強火で1〜2分炒め、ねぎとしょうゆを端から入れて完成",tip:"しょうゆはフライパンの縁から入れると香ばしくなります"}],
+   done:"パラパラチャーハン完成！これはお店に出せますよ🍳"},
+
+  {id:36,name:"ひき肉そぼろ丼",time:"10分",diff:1,ingredients:["豚ひき肉","しょうゆ","ごはん"],
+   amounts:[{n:"豚ひき肉",q:"150g",m:true},{n:"しょうゆ",q:"大さじ2",m:true},{n:"みりん",q:"大さじ1"},{n:"砂糖",q:"小さじ1"},{n:"しょうがチューブ",q:"1cm"},{n:"ごはん",q:"2膳",m:true}],
+   steps:[{t:"フライパンにひき肉としょうがを入れて中火で炒める（油不要）",tip:"ひき肉から脂が出るので油はいりません"},{t:"肉の色が変わったら調味料を加えて汁気がなくなるまで炒める",tip:null},{t:"ごはんの上にたっぷりのせて完成",tip:"冷蔵3日・冷凍1ヶ月保存できる便利おかずです！"}],
+   done:"万能そぼろ完成！冷凍ストックしておくと便利ですよ🍚"},
+
+  {id:37,name:"和風パスタ（ツナバター）",time:"12分",diff:1,ingredients:["パスタ","ツナ缶","しょうゆ","バター"],
+   amounts:[{n:"パスタ",q:"200g",m:true},{n:"ツナ缶",q:"1個",m:true},{n:"しょうゆ",q:"大さじ1.5",m:true},{n:"バター",q:"10g",m:true},{n:"焼きのり",q:"適量"},{n:"塩（ゆで用）",q:"小さじ2"}],
+   steps:[{t:"塩を加えた沸騰したお湯でパスタを表示通りゆでる",tip:"お湯1Lに塩小さじ1が目安"},{t:"ゆで上がったパスタをザルにあけてフライパンに戻し、バターとしょうゆを絡める",tip:"熱いうちにバターを絡めることが大事"},{t:"油を切ったツナを加えて混ぜ、のりをのせて完成",tip:null}],
+   done:"和風パスタはいつ食べても飽きない！ツナの旨みが最高ですね🍝"},
+
+  {id:38,name:"トマト缶パスタ",time:"15分",diff:2,ingredients:["パスタ","トマト缶","コンソメ"],
+   amounts:[{n:"パスタ",q:"200g",m:true},{n:"トマト缶（カット）",q:"1缶",m:true},{n:"コンソメ",q:"1個",m:true},{n:"玉ねぎ",q:"1/4個"},{n:"にんにくチューブ",q:"1cm"},{n:"オリーブ油",q:"大さじ1"},{n:"塩こしょう",q:"少々"}],
+   steps:[{t:"パスタを表示通りゆでる。フライパンでにんにくと玉ねぎを炒める",tip:"パスタを茹でながらソースを作ると時短になります"},{t:"トマト缶とコンソメを加えて5〜6分煮詰める",tip:"木べらで混ぜながら煮詰めると酸味がやわらぎます"},{t:"ゆでたパスタを加えてソースと絡め、塩こしょうで完成",tip:null}],
+   done:"本格トマトパスタが家で作れる！イタリアン気分ですね🍅"},
+
+  {id:39,name:"ケチャップライス（簡単オムライス風）",time:"12分",diff:1,ingredients:["ごはん","たまご","ケチャップ","ウインナー"],
+   amounts:[{n:"ごはん",q:"2膳",m:true},{n:"たまご",q:"2個",m:true},{n:"ケチャップ",q:"大さじ3",m:true},{n:"ウインナー",q:"3本",m:true},{n:"バター",q:"5g"},{n:"塩こしょう",q:"少々"}],
+   steps:[{t:"ウインナーを小口切りにしてバターで炒め、ごはんを加えてケチャップ・塩こしょうで炒める（チキンライス風）",tip:"ケチャップは焦がすと甘みが増します"},{t:"別のフライパンで薄焼きたまごを作る（溶きたまごを弱火で広げる）",tip:"片面だけ焼けばOK"},{t:"チキンライスを器に盛り薄焼きたまごをのせ、ケチャップをかけて完成",tip:null}],
+   done:"子どもが大喜びするやつ！自分で作れると最高ですね😊"},
+
+  {id:40,name:"ツナマヨトースト",time:"5分",diff:1,ingredients:["食パン","ツナ缶","マヨネーズ"],
+   amounts:[{n:"食パン",q:"2枚",m:true},{n:"ツナ缶",q:"1個",m:true},{n:"マヨネーズ",q:"大さじ2",m:true},{n:"塩こしょう",q:"少々"}],
+   steps:[{t:"ツナ缶の油を切り、マヨネーズ・塩こしょうと混ぜる",tip:"ツナをほぐしながらよく混ぜます"},{t:"食パンにのせてトースターで2〜3分焼く",tip:"チーズをのせるとさらにおいしいです"},{t:"きつね色になったら完成",tip:null}],
+   done:"朝5分でできる！ボリューム朝食ですね🍞"},
+
+  // ─── 肉料理 ───
+  {id:41,name:"鶏もも塩焼き",time:"15分",diff:2,ingredients:["鶏もも肉"],
+   amounts:[{n:"鶏もも肉",q:"1枚（250〜300g）",m:true},{n:"塩",q:"小さじ1/2"},{n:"にんにくチューブ",q:"1cm"},{n:"こしょう",q:"少々"},{n:"油",q:"小さじ1"}],
+   steps:[{t:"鶏肉を室温に10分出しておき、塩・こしょう・にんにくをもみ込む",tip:"冷たいまま焼くと火が通りにくいです"},{t:"フライパンに油を熱し、皮目を下にして中火で7分焼く",tip:"押さえつけると皮がパリパリになります。触らずじっと待つ！"},{t:"皮に焼き色がついたらひっくり返し弱火で5分焼いて完成",tip:"ピンク色の部分があれば追加で2分ずつ加熱"}],
+   done:"皮パリジューシー！上手に焼けましたか？🍗"},
+
+  {id:42,name:"鶏照り焼き",time:"15分",diff:2,ingredients:["鶏もも肉","しょうゆ"],
+   amounts:[{n:"鶏もも肉",q:"1枚",m:true},{n:"しょうゆ",q:"大さじ2",m:true},{n:"みりん",q:"大さじ2"},{n:"砂糖",q:"小さじ1"},{n:"油",q:"小さじ1"}],
+   steps:[{t:"鶏肉をフライパンに皮目を下にして入れ中火で7分焼く",tip:"蓋をして焼くと中まで火が通りやすいです"},{t:"ひっくり返して3分焼き、余分な脂をペーパーでふく",tip:null},{t:"しょうゆ・みりん・砂糖を混ぜたタレを加えて絡め、照りが出たら完成",tip:"タレを入れてから強火で短時間！焦げないよう注意"}],
+   done:"照り焼きって本当においしい！ごはんが止まりませんね🍗"},
+
+  {id:43,name:"豚バラ大根",time:"25分",diff:2,ingredients:["豚バラ","大根","しょうゆ"],
+   amounts:[{n:"豚バラ",q:"100g",m:true},{n:"大根",q:"1/4本",m:true},{n:"しょうゆ",q:"大さじ2",m:true},{n:"みりん",q:"大さじ1"},{n:"砂糖",q:"小さじ1"},{n:"水",q:"200ml"}],
+   steps:[{t:"大根を2cm輪切りにしてラップで包んで電子レンジ加熱",r:{w600:"4分（240秒）",w500:"5分（300秒）"},tip:"レンジで下処理すると煮込み時間が大幅短縮"},{t:"鍋で豚バラを炒め脂が出たらふき取り、大根を加えてさっと炒める",tip:"余分な脂をとることでさっぱり仕上がります"},{t:"調味料と水を加えて蓋をして弱火で15分煮て完成",tip:"冷ますとさらに味がしみ込みます"}],
+   done:"大根に味がしみてますか？やさしい味でほっこりしますね🍱"},
+
+  {id:44,name:"もやしと豚バラの重ね蒸し",time:"12分",diff:1,ingredients:["もやし","豚バラ","ごま油","しょうゆ"],
+   amounts:[{n:"もやし",q:"1袋（200g）",m:true},{n:"豚バラ",q:"150g",m:true},{n:"ごま油",q:"小さじ2",m:true},{n:"しょうゆ",q:"大さじ1.5",m:true},{n:"ポン酢（あれば）",q:"適量"}],
+   steps:[{t:"フライパンにもやしを広げ、豚バラを重ねてのせる",tip:null},{t:"蓋をして中火で8〜10分蒸し焼きにする",tip:"蒸し焼きにすることで豚肉の旨みがもやしにしみ込みます"},{t:"ごま油としょうゆをかけて完成",tip:"ポン酢で食べるのもさっぱりしておすすめ！"}],
+   done:"鍋一つで簡単！しかも絶品！豚肉の旨みがすごいですね🥢"},
+
+  {id:45,name:"ピーマンの肉詰め",time:"20分",diff:2,ingredients:["ピーマン","豚ひき肉","しょうゆ"],
+   amounts:[{n:"ピーマン",q:"4個",m:true},{n:"豚ひき肉",q:"150g",m:true},{n:"しょうゆ",q:"大さじ1",m:true},{n:"みりん",q:"大さじ1"},{n:"たまご",q:"1/4個"},{n:"塩こしょう",q:"少々"},{n:"油",q:"小さじ1"}],
+   steps:[{t:"ピーマンを半分に切って種を取り除く。ひき肉に塩こしょう・たまごを混ぜる",tip:null},{t:"ピーマンの内側に片栗粉（小さじ1）をふり、肉だねを詰める",tip:"片栗粉をはたくと肉がはがれにくくなります"},{t:"肉面を下にして油で中火で3〜4分焼き、ひっくり返して3分。しょうゆとみりんを加えて絡めて完成",tip:null}],
+   done:"見た目も豪華！手間をかけた甲斐がありますね🫑"},
+
+  // ─── 副菜・その他 ───
+  {id:46,name:"もやしのナムル",time:"8分",diff:1,ingredients:["もやし","ごま油","しょうゆ"],
+   amounts:[{n:"もやし",q:"1袋（200g）",m:true},{n:"ごま油",q:"小さじ2",m:true},{n:"しょうゆ",q:"小さじ1",m:true},{n:"鶏がらスープの素",q:"小さじ1"},{n:"白ごま",q:"小さじ1"}],
+   steps:[{t:"沸騰したお湯でもやしを1分ゆでる",tip:"1分が大事！長くゆでるとしなしなになります"},{t:"ザルにあけてしっかり水気を切る",tip:"水気が残ると水っぽくなるのでしっかり切ること"},{t:"ごま油・しょうゆ・鶏がらスープの素と和え、白ごまをふって完成",tip:"冷蔵庫で3日保存できます"}],
+   done:"コスパ最強ナムル！シャキシャキですか？😊"},
+
+  {id:47,name:"大根とツナのサラダ",time:"8分",diff:1,ingredients:["大根","ツナ缶","しょうゆ","ごま油"],
+   amounts:[{n:"大根",q:"1/4本",m:true},{n:"ツナ缶",q:"1個",m:true},{n:"しょうゆ",q:"小さじ2",m:true},{n:"ごま油",q:"小さじ1",m:true},{n:"白ごま",q:"適量"}],
+   steps:[{t:"大根を細切りまたは千切りにする",tip:"ピーラーで削ると細くきれいに切れます"},{t:"塩少々でもんで5分置き、水気を絞る",tip:"塩もみすることで大根の辛みがやわらぎます"},{t:"油を切ったツナ・しょうゆ・ごま油・ごまと和えて完成",tip:null}],
+   done:"さっぱりヘルシー！シャキシャキ食感が楽しいですね🥗"},
+
+  {id:48,name:"厚揚げの醤油焼き",time:"8分",diff:1,ingredients:["厚揚げ","しょうゆ"],
+   amounts:[{n:"厚揚げ",q:"1枚（150g）",m:true},{n:"しょうゆ",q:"小さじ2",m:true},{n:"ごま油",q:"小さじ1"},{n:"ねぎ（あれば）",q:"適量"}],
+   steps:[{t:"厚揚げをキッチンペーパーで油をふき、1cm厚のスライスに切る",tip:null},{t:"フライパン（油不要）で中火で両面を焼く（各2〜3分）",tip:"しっかり焼き色をつけると香ばしくておいしいです"},{t:"しょうゆとごま油をかけ、ねぎをのせて完成",tip:null}],
+   done:"外カリッ中ふわ！安くてボリューミー！最高ですね😊"},
+
+  {id:49,name:"厚揚げと大根の煮物",time:"15分",diff:1,ingredients:["厚揚げ","大根","しょうゆ"],
+   amounts:[{n:"厚揚げ",q:"1枚",m:true},{n:"大根",q:"1/4本",m:true},{n:"しょうゆ",q:"大さじ2",m:true},{n:"みりん",q:"大さじ1"},{n:"砂糖",q:"小さじ1"},{n:"水",q:"200ml"}],
+   steps:[{t:"大根を2cm輪切りにしてレンジで加熱",r:{w600:"3分（180秒）",w500:"3分半（210秒）"},tip:null},{t:"厚揚げを一口大に切り、大根と一緒に鍋に入れて調味料と水を加える",tip:null},{t:"中火で10分煮て味をしみ込ませたら完成",tip:"冷ますとさらに味がしみ込みます"}],
+   done:"ほっとする和の味！厚揚げがだしを吸っておいしいですね🍲"},
+
+  {id:50,name:"なすとひき肉の味噌炒め",time:"12分",diff:2,ingredients:["なす","豚ひき肉","味噌","ごま油"],
+   amounts:[{n:"なす",q:"2本",m:true},{n:"豚ひき肉",q:"100g",m:true},{n:"味噌",q:"大さじ1.5",m:true},{n:"ごま油",q:"小さじ1",m:true},{n:"みりん",q:"大さじ1"},{n:"砂糖",q:"小さじ1"},{n:"油",q:"大さじ1"}],
+   steps:[{t:"なすを乱切りにして油で炒める（3〜4分）",tip:"なすは多めの油で炒めると柔らかくなります"},{t:"ひき肉を加えて炒める",tip:"ひき肉の色が変わったら次へ"},{t:"味噌・みりん・砂糖を混ぜたタレを加えて全体に絡め、ごま油を回しかけて完成",tip:null}],
+   done:"甘辛みそがたまらない！ごはんが止まらなくなりますね🍆"},
+
+  {id:51,name:"ブロッコリーとたまごの炒め物",time:"10分",diff:1,ingredients:["ブロッコリー","たまご","しょうゆ"],
+   amounts:[{n:"ブロッコリー",q:"1/2株",m:true},{n:"たまご",q:"2個",m:true},{n:"しょうゆ",q:"小さじ1",m:true},{n:"塩こしょう",q:"少々"},{n:"油",q:"小さじ1"}],
+   steps:[{t:"ブロッコリーを小房に分けてレンジで加熱",r:{w600:"2分（120秒）",w500:"2分半（150秒）"},tip:"少し硬めで止めるとあとの炒めで丁度よくなります"},{t:"フライパンに油を熱し溶きたまごを入れ、半熟のうちにブロッコリーを加えて炒める",tip:null},{t:"しょうゆ・塩こしょうで味付けして完成",tip:null}],
+   done:"緑と黄色の彩り鮮やか！栄養バランスも抜群ですね🥦"},
+
+  {id:52,name:"玉ねぎドレッシングサラダ",time:"5分",diff:1,ingredients:["玉ねぎ","レタス","しょうゆ"],
+   amounts:[{n:"玉ねぎ",q:"1/4個",m:true},{n:"レタス",q:"3〜4枚",m:true},{n:"しょうゆ",q:"大さじ1",m:true},{n:"酢",q:"大さじ1"},{n:"砂糖",q:"小さじ1"},{n:"油",q:"大さじ1"}],
+   steps:[{t:"玉ねぎをすりおろし、しょうゆ・酢・砂糖・油と混ぜる",tip:"辛みが気になる場合は5分水にさらしてください"},{t:"レタスを手でちぎって器に盛る",tip:"手でちぎるとドレッシングが絡みやすくなります"},{t:"食べる直前にドレッシングをかけて完成",tip:null}],
+   done:"手作りドレッシングって断然おいしい！🥗"},
+
+  {id:53,name:"簡単カレー",time:"25分",diff:2,ingredients:["玉ねぎ","じゃがいも","にんじん","カレー粉","ごはん"],
+   amounts:[{n:"玉ねぎ",q:"1個",m:true},{n:"じゃがいも",q:"2個",m:true},{n:"にんじん",q:"1本",m:true},{n:"カレー粉",q:"大さじ1〜2",m:true},{n:"コンソメ",q:"1個"},{n:"水",q:"400ml"},{n:"小麦粉",q:"大さじ1"},{n:"バター",q:"10g"},{n:"ごはん",q:"2膳",m:true}],
+   steps:[{t:"玉ねぎ・じゃがいも・にんじんをひと口大に切り、バターで玉ねぎを炒める",tip:"玉ねぎはしっかり炒めると甘みが出ます"},{t:"小麦粉とカレー粉を加えて炒め、水とコンソメを加えて野菜が柔らかくなるまで15分煮る",tip:"焦げないように時々混ぜながら煮ます"},{t:"塩で味を調えてごはんにかけて完成",tip:"とろみが足りない場合は水溶き片栗粉を少し加えて"}],
+   done:"ルウなしで本格カレー！家にある材料だけでできるなんて感動ですね🍛"},
+
+  {id:54,name:"豚バラともやしの味噌炒め",time:"10分",diff:1,ingredients:["豚バラ","もやし","味噌","ごま油"],
+   amounts:[{n:"豚バラ",q:"150g",m:true},{n:"もやし",q:"1袋",m:true},{n:"味噌",q:"大さじ1",m:true},{n:"ごま油",q:"小さじ1",m:true},{n:"みりん",q:"大さじ1"},{n:"しょうゆ",q:"小さじ1"},{n:"にんにくチューブ",q:"1cm"}],
+   steps:[{t:"豚バラを炒め、脂が出てきたらもやしを加えて炒める（2〜3分）",tip:"強火でさっと炒めるのがポイント"},{t:"味噌・みりん・しょうゆ・にんにくを混ぜたタレを加えて全体に絡める",tip:null},{t:"ごま油を回しかけて完成",tip:"最後にごま油を入れると香りがよくなります"}],
+   done:"甘辛味噌が絶品！ごはんが進む一品ですね🍜"},
+
+  {id:55,name:"ツナとキャベツのパスタ",time:"12分",diff:1,ingredients:["パスタ","ツナ缶","キャベツ","しょうゆ"],
+   amounts:[{n:"パスタ",q:"200g",m:true},{n:"ツナ缶",q:"1個",m:true},{n:"キャベツ",q:"1/4個",m:true},{n:"しょうゆ",q:"大さじ1",m:true},{n:"バター",q:"10g"},{n:"塩（ゆで用）",q:"小さじ2"}],
+   steps:[{t:"パスタをゆで始め、残り2〜3分でキャベツを一緒にゆでる",tip:"キャベツを一緒にゆでると時短になります"},{t:"ゆで上がったパスタとキャベツをザルにあけてフライパンへ",tip:null},{t:"バター・しょうゆ・ツナを加えて混ぜ合わせて完成",tip:null}],
+   done:"ツナとキャベツの組み合わせが絶品！ボリュームも満点ですね🍝"},
+
+  {id:56,name:"ほうれん草とベーコンのバター炒め",time:"8分",diff:1,ingredients:["ほうれん草","バター","しょうゆ"],
+   amounts:[{n:"ほうれん草",q:"1袋",m:true},{n:"バター",q:"10g",m:true},{n:"しょうゆ",q:"小さじ1",m:true},{n:"塩こしょう",q:"少々"}],
+   steps:[{t:"ほうれん草を3〜4cm幅に切る",tip:null},{t:"フライパンにバターを溶かしほうれん草を中火で炒める（2分）",tip:"水気が出てきたら少し火を強めます"},{t:"しょうゆ・塩こしょうで味付けして完成",tip:null}],
+   done:"バターとしょうゆの組み合わせは間違いなし！🌿"},
+
+  {id:57,name:"きのこの炊き込みごはん風（レンジ）",time:"15分",diff:1,ingredients:["きのこ","しょうゆ","ごはん"],
+   amounts:[{n:"きのこ（しめじ・えのきなど）",q:"100g",m:true},{n:"しょうゆ",q:"大さじ1",m:true},{n:"みりん",q:"大さじ1"},{n:"ごはん",q:"2膳",m:true},{n:"バター",q:"5g"}],
+   steps:[{t:"きのこをほぐし、しょうゆ・みりんと混ぜ合わせてラップをかけレンジで加熱",r:{w600:"3分（180秒）",w500:"3分半（210秒）"},tip:"しっかり加熱してきのこを柔らかくします"},{t:"温かいごはんにきのことバターをのせてよく混ぜる",tip:null},{t:"全体がなじんだら完成",tip:null}],
+   done:"炊き込みごはんの味がレンジで！きのこの香りが最高ですね🍄"},
+
+  {id:58,name:"さば缶キムチ鍋風スープ",time:"10分",diff:1,ingredients:["さば缶","豆腐","味噌"],
+   amounts:[{n:"さば缶（水煮）",q:"1缶",m:true},{n:"豆腐",q:"1/2丁",m:true},{n:"味噌",q:"大さじ1.5",m:true},{n:"水",q:"400ml"},{n:"ねぎ",q:"適量"},{n:"ごま油",q:"小さじ1"}],
+   steps:[{t:"鍋に水を入れて沸かし、さば缶を汁ごと入れる",tip:"さば缶の汁はだし代わりになって絶品です"},{t:"豆腐を崩しながら加えて2〜3分煮る",tip:null},{t:"味噌を溶き入れてねぎとごま油をかけて完成",tip:null}],
+   done:"さば缶で手軽に本格スープ！体が温まりますね🐟"},
+
+  {id:59,name:"ちくわの磯辺焼き（揚げ焼き）",time:"8分",diff:1,ingredients:["ちくわ","しょうゆ","ごま油"],
+   amounts:[{n:"ちくわ",q:"4本",m:true},{n:"しょうゆ",q:"小さじ1",m:true},{n:"青のり",q:"適量"},{n:"ごま油",q:"小さじ1",m:true}],
+   steps:[{t:"ちくわを斜め切りにする",tip:null},{t:"フライパンにごま油を熱してちくわを焼く（2〜3分）",tip:"全面に焼き色がつくようにひっくり返しながら"},{t:"しょうゆをかけて絡め、青のりをふって完成",tip:null}],
+   done:"おつまみにも副菜にも！磯の香りがたまりませんね😋"},
+
+  {id:60,name:"えびとキャベツの塩炒め",time:"10分",diff:1,ingredients:["えび","キャベツ","ごま油","しょうゆ"],
+   amounts:[{n:"えび",q:"150g",m:true},{n:"キャベツ",q:"1/4個",m:true},{n:"ごま油",q:"小さじ1",m:true},{n:"しょうゆ",q:"小さじ1",m:true},{n:"塩こしょう",q:"少々"},{n:"にんにくチューブ",q:"1cm"}],
+   steps:[{t:"えびの背わたを取って塩でもみ洗いし、キャベツをざく切りにする",tip:"えびはしっかり洗うと臭みが取れます"},{t:"フライパンにごま油とにんにくを入れて中火にかけ、えびを炒める（2〜3分）",tip:"えびが赤くなったら火が通っています"},{t:"キャベツを加えて炒め、しょうゆと塩こしょうで味付けして完成",tip:null}],
+   done:"えびとキャベツは鉄板の組み合わせ！シンプルでおいしいですね🦐"}
+];
+
+/* ── ページ遷移 ── */
+function startApp(){
+  document.getElementById('page-top').classList.add('exit');
+  document.getElementById('page-app').classList.add('active');
+  document.getElementById('page-app').scrollTop=0;
+}
+function goTop(){
+  document.getElementById('page-top').classList.remove('exit');
+  document.getElementById('page-app').classList.remove('active');
+}
+
+/* ── 選択カウント ── */
+document.querySelectorAll('.chip').forEach(c=>c.addEventListener('change',updateCount));
+function updateCount(){
+  const n=document.querySelectorAll('.chip:checked').length;
+  document.getElementById('selected-count').innerHTML=
+    n===0?'食材をタップして選んでね🥕':`<span>${n}種類</span>の食材が選ばれています`;
+}
+
+function getSelected(){return Array.from(document.querySelectorAll('.chip:checked')).map(c=>c.value);}
+
+function makeRange(r){
+  if(!r)return '';
+  return `<div class="range-box"><span>📡</span><span class="range-main">600W → ${r.w600}</span><span class="range-alt">500W → ${r.w500}</span></div>`;
+}
+
+/* ── 検索 ── */
+function search(){
+  const selected=getSelected();
+  if(selected.length===0){alert('食材を1つ以上選んでください🥕');return;}
+  const matched=RECIPES
+    .map(r=>({...r,mc:r.ingredients.filter(i=>selected.includes(i)).length}))
+    .filter(r=>r.mc>0)
+    .sort((a,b)=>{
+      const af=a.mc/a.ingredients.length,bf=b.mc/b.ingredients.length;
+      return bf!==af?bf-af:b.mc-a.mc;
+    });
+  const rEl=document.getElementById('results');
+  const lEl=document.getElementById('recipe-list');
+  const hEl=document.getElementById('result-header');
+  rEl.style.display='block';
+  rEl.scrollIntoView({behavior:'smooth',block:'start'});
+  if(matched.length===0){
+    hEl.innerHTML='';
+    lEl.innerHTML='<div class="no-result">😢 ちょっと食材が足りないかも...<br>もう少し選んでみてね！</div>';
+    return;
+  }
+  hEl.innerHTML=`<span class="result-count">${matched.length}品</span>のレシピがみつかりました！`;
+  lEl.innerHTML=matched.map(r=>{
+    const isFull=r.mc===r.ingredients.length;
+    const missing=r.ingredients.filter(i=>!selected.includes(i));
+    const mHtml=missing.length>0?`<div class="missing-box">🛒 あとこれで作れる：<strong>${missing.join(' / ')}</strong></div>`:'';
+    const aHtml=r.amounts.map(a=>{
+      const have=selected.includes(a.n)?'have':'';
+      return`<tr class="${have}"><td class="ing-name">${a.n}</td><td class="ing-qty">${a.q}</td></tr>`;
+    }).join('');
+    const sHtml=r.steps.map((s,i)=>{
+      const rHtml=makeRange(s.r);
+      const tHtml=s.tip?`<div class="tips-box">💡 <strong>ポイント：</strong>${s.tip}</div>`:'';
+      return`<li class="step-item"><div class="step-num">${i+1}</div><div class="step-body"><div class="step-text">${s.t}</div>${rHtml}${tHtml}</div></li>`;
+    }).join('');
+    const d=DIFF[r.diff];
+    return`<div class="recipe-card">
+      <div class="recipe-header" onclick="toggle(${r.id})">
+        <div>
+          <div class="recipe-name">${r.name}</div>
+          <div class="recipe-badges">
+            <span class="badge badge-time">⏱ ${r.time}</span>
+            <span class="badge ${d.cls}">${d.label}</span>
+            <span class="badge ${isFull?'badge-full':'badge-part'}">${isFull?'✓ 全材料あり':`${r.mc}/${r.ingredients.length} 一致`}</span>
+          </div>
+        </div>
+        <div class="toggle-hint" id="ic-${r.id}">▼ 詳しく見る</div>
+      </div>
+      ${mHtml}
+      <div class="recipe-detail" id="dt-${r.id}">
+        <div class="detail-section"><div class="detail-label">📋 材料（2人分）</div><table class="amounts-table">${aHtml}</table></div>
+        <div class="detail-section"><div class="detail-label">👩‍🍳 作り方</div><ol class="steps-list">${sHtml}</ol></div>
+        <div class="done-box">🎉 ${r.done}</div>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+function toggle(id){
+  const el=document.getElementById(`dt-${id}`);
+  const ic=document.getElementById(`ic-${id}`);
+  const open=el.classList.toggle('open');
+  ic.textContent=open?'▲ 閉じる':'▼ 詳しく見る';
+}
+
+function reset(){
+  document.querySelectorAll('.chip:checked').forEach(c=>c.checked=false);
+  updateCount();
+  document.getElementById('results').style.display='none';
+}
+</script>
+</body>
+</html>
