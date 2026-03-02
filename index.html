@@ -96,6 +96,13 @@ body{font-family:'Zen Maru Gothic',sans-serif;color:var(--text);background:var(-
 .chip:checked+label{background:var(--orange);border-color:var(--orange);color:#fff;box-shadow:0 2px 8px rgba(232,132,58,0.35);transform:translateY(-1px);}
 .chip+label:hover{border-color:var(--orange-light);color:var(--brown);}
 
+/* さしすせそ必須アイテム */
+.sasishisuso-note{font-size:0.72rem;color:var(--orange);font-weight:700;margin-bottom:8px;padding:4px 10px;background:rgba(232,132,58,0.08);border-radius:8px;display:inline-block;}
+.chip-essential{display:none;}
+.chip-essential+label{cursor:pointer;padding:7px 14px;border-radius:30px;font-size:0.85rem;border:2px solid var(--orange);background:rgba(232,132,58,0.06);color:var(--brown);transition:all 0.18s ease;user-select:none;font-weight:700;}
+.chip-essential:checked+label{background:var(--orange);border-color:var(--orange);color:#fff;box-shadow:0 2px 8px rgba(232,132,58,0.4);transform:translateY(-1px);}
+.chip-essential+label:hover{background:rgba(232,132,58,0.12);}
+
 .selected-count{text-align:center;font-size:0.82rem;color:var(--text-light);margin-bottom:14px;min-height:20px;}
 .selected-count span{color:var(--orange);font-weight:700;font-size:1rem;}
 .btn-search{width:100%;padding:15px;background:linear-gradient(135deg,var(--orange),#d4692a);color:#fff;font-family:'Zen Maru Gothic',sans-serif;font-size:1.05rem;font-weight:700;border:none;border-radius:14px;cursor:pointer;letter-spacing:0.05em;box-shadow:0 4px 14px rgba(232,132,58,0.4);transition:all 0.2s ease;}
@@ -184,7 +191,7 @@ footer{text-align:center;padding:20px;font-size:0.72rem;color:rgba(107,76,42,0.4
   <div class="btn-start-wrap">
     <button class="btn-start" onclick="startApp()">🥦 はじめる<span class="btn-sub">食材を選んでレシピをみっけ！</span></button>
   </div>
-  <p class="top-bottom-note">登録不要・無料・広告なし　by Smile Plus Consulting</p>
+  <p class="top-bottom-note">考えるを、ひとりにしない。今日のごはんも。SPC</p>
 </div>
 
 <!-- APP PAGE -->
@@ -276,11 +283,18 @@ footer{text-align:center;padding:20px;font-size:0.72rem;color:rgba(107,76,42,0.4
       </div>
 
       <div class="ingredient-group">
-        <div class="group-label">🧂 調味料</div>
+        <div class="group-label">🧂 調味料の基本「さしすせそ」</div>
+        <div class="sasishisuso-note">料理の必須アイテム！まずここからチェックしてね</div>
+        <div class="chips" style="margin-bottom:10px;">
+          <input class="chip chip-essential" type="checkbox" id="i_sato" value="砂糖"><label for="i_sato" class="label-essential">さ 砂糖</label>
+          <input class="chip chip-essential" type="checkbox" id="i_shio" value="塩"><label for="i_shio" class="label-essential">し 塩</label>
+          <input class="chip chip-essential" type="checkbox" id="i_su" value="酢"><label for="i_su" class="label-essential">す 酢</label>
+          <input class="chip chip-essential" type="checkbox" id="i_shoyu" value="しょうゆ"><label for="i_shoyu" class="label-essential">せ しょうゆ</label>
+          <input class="chip chip-essential" type="checkbox" id="i_miso" value="味噌"><label for="i_miso" class="label-essential">そ 味噌</label>
+        </div>
+        <div class="group-label" style="margin-top:4px;">＋ その他の調味料</div>
         <div class="chips">
           <input class="chip" type="checkbox" id="i_mentsuyu" value="めんつゆ"><label for="i_mentsuyu">めんつゆ</label>
-          <input class="chip" type="checkbox" id="i_miso" value="味噌"><label for="i_miso">味噌</label>
-          <input class="chip" type="checkbox" id="i_shoyu" value="しょうゆ"><label for="i_shoyu">しょうゆ</label>
           <input class="chip" type="checkbox" id="i_gomaabura" value="ごま油"><label for="i_gomaabura">ごま油</label>
           <input class="chip" type="checkbox" id="i_tobanjan" value="豆板醤"><label for="i_tobanjan">豆板醤</label>
           <input class="chip" type="checkbox" id="i_konsomme" value="コンソメ"><label for="i_konsomme">コンソメ</label>
@@ -573,12 +587,12 @@ const RECIPES=[
    steps:[{t:"ブロッコリーを小房に分けてレンジで加熱",r:{w600:"2分（120秒）",w500:"2分半（150秒）"},tip:"少し硬めで止めるとあとの炒めで丁度よくなります"},{t:"フライパンに油を熱し溶きたまごを入れ、半熟のうちにブロッコリーを加えて炒める",tip:null},{t:"しょうゆ・塩こしょうで味付けして完成",tip:null}],
    done:"緑と黄色の彩り鮮やか！栄養バランスも抜群ですね🥦"},
 
-  {id:52,name:"玉ねぎドレッシングサラダ",time:"5分",diff:1,ingredients:["玉ねぎ","レタス","しょうゆ"],
+  {id:52,name:"玉ねぎドレッシングサラダ",time:"5分",diff:1,ingredients:["玉ねぎ","レタス","しょうゆ","酢","砂糖"],
    amounts:[{n:"玉ねぎ",q:"1/4個",m:true},{n:"レタス",q:"3〜4枚",m:true},{n:"しょうゆ",q:"大さじ1",m:true},{n:"酢",q:"大さじ1"},{n:"砂糖",q:"小さじ1"},{n:"油",q:"大さじ1"}],
    steps:[{t:"玉ねぎをすりおろし、しょうゆ・酢・砂糖・油と混ぜる",tip:"辛みが気になる場合は5分水にさらしてください"},{t:"レタスを手でちぎって器に盛る",tip:"手でちぎるとドレッシングが絡みやすくなります"},{t:"食べる直前にドレッシングをかけて完成",tip:null}],
    done:"手作りドレッシングって断然おいしい！🥗"},
 
-  {id:53,name:"簡単カレー",time:"25分",diff:2,ingredients:["玉ねぎ","じゃがいも","にんじん","カレー粉","ごはん"],
+  {id:53,name:"簡単カレー",time:"25分",diff:2,ingredients:["玉ねぎ","じゃがいも","にんじん","カレー粉","ごはん","塩"],
    amounts:[{n:"玉ねぎ",q:"1個",m:true},{n:"じゃがいも",q:"2個",m:true},{n:"にんじん",q:"1本",m:true},{n:"カレー粉",q:"大さじ1〜2",m:true},{n:"コンソメ",q:"1個"},{n:"水",q:"400ml"},{n:"小麦粉",q:"大さじ1"},{n:"バター",q:"10g"},{n:"ごはん",q:"2膳",m:true}],
    steps:[{t:"玉ねぎ・じゃがいも・にんじんをひと口大に切り、バターで玉ねぎを炒める",tip:"玉ねぎはしっかり炒めると甘みが出ます"},{t:"小麦粉とカレー粉を加えて炒め、水とコンソメを加えて野菜が柔らかくなるまで15分煮る",tip:"焦げないように時々混ぜながら煮ます"},{t:"塩で味を調えてごはんにかけて完成",tip:"とろみが足りない場合は水溶き片栗粉を少し加えて"}],
    done:"ルウなしで本格カレー！家にある材料だけでできるなんて感動ですね🍛"},
