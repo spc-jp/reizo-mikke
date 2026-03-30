@@ -4,6 +4,25 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>冷蔵庫みっけ！</title>
+
+<!-- Favicon / Apple Touch Icon -->
+<link rel="icon" href="./favicon.png" type="image/png">
+<link rel="apple-touch-icon" href="./favicon.png">
+
+<!-- OGP / X(Twitter) Cards設定 -->
+<!-- ※ OGPのURLと画像は、公開時の絶対パス（https://...）に書き換えてください -->
+<meta property="og:site_name" content="冷蔵庫みっけ！">
+<meta property="og:title" content="冷蔵庫みっけ！">
+<meta property="og:description" content="今ある食材を選ぶだけで今日のごはんが決まる！60品のレシピから自動マッチング。">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://example.com/"> <!-- 公開するURLに変更してください -->
+<meta property="og:image" content="https://example.com/ogp.jpg"> <!-- 公開する画像の絶対パスに変更してください -->
+
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="冷蔵庫みっけ！">
+<meta name="twitter:description" content="今ある食材を選ぶだけで今日のごはんが決まる！60品のレシピから自動マッチング。">
+<meta name="twitter:image" content="https://example.com/ogp.jpg"> <!-- 公開する画像の絶対パスに変更してください -->
+
 <link href="https://fonts.googleapis.com/css2?family=Zen+Maru+Gothic:wght@400;500;700&family=Kaisei+Opti:wght@400;700&display=swap" rel="stylesheet">
 <style>
 :root {
@@ -430,7 +449,7 @@ const RECIPES=[
   {id:21,name:"きのこのバター醤油炒め",time:"8分",diff:1,ingredients:["きのこ","バター","しょうゆ"],
    amounts:[{n:"きのこ（しめじ・えのきなど）",q:"200g",m:true},{n:"バター",q:"10g",m:true},{n:"しょうゆ",q:"大さじ1",m:true}],
    steps:[{t:"きのこを食べやすい大きさにほぐす（しめじは石づきをとって小房に）",tip:null},{t:"フライパンにバターを溶かして中火できのこを炒める（3〜4分）",tip:"最初は触らずに焼き色をつけると香ばしくなります"},{t:"しんなりしたらしょうゆを端から回し入れて完成",tip:null}],
-   done:"きのこの旨みとバターの香りが最高！何にでも合う一品ですね🍄"},
+   done:"きのこの旨みが溶け出た絶品スープ！低カロリーも嬉しいですね🍄"},
 
   // ─── 魚・海鮮系 ───
   {id:22,name:"さば缶と大根の煮物",time:"15分",diff:1,ingredients:["さば缶","大根","しょうゆ"],
@@ -615,7 +634,7 @@ const RECIPES=[
   {id:57,name:"きのこの炊き込みごはん風（レンジ）",time:"15分",diff:1,ingredients:["きのこ","しょうゆ","ごはん"],
    amounts:[{n:"きのこ（しめじ・えのきなど）",q:"100g",m:true},{n:"しょうゆ",q:"大さじ1",m:true},{n:"みりん",q:"大さじ1"},{n:"ごはん",q:"2膳",m:true},{n:"バター",q:"5g"}],
    steps:[{t:"きのこをほぐし、しょうゆ・みりんと混ぜ合わせてラップをかけレンジで加熱",r:{w600:"3分（180秒）",w500:"3分半（210秒）"},tip:"しっかり加熱してきのこを柔らかくします"},{t:"温かいごはんにきのことバターをのせてよく混ぜる",tip:null},{t:"全体がなじんだら完成",tip:null}],
-   done:"炊き込みごはんの味がレンジで！きのこの香りが最高ですね🍄"},
+   done:"炊き込みごはんの味がレンジで！きのきの香りが最高ですね🍄"},
 
   {id:58,name:"さば缶キムチ鍋風スープ",time:"10分",diff:1,ingredients:["さば缶","豆腐","味噌"],
    amounts:[{n:"さば缶（水煮）",q:"1缶",m:true},{n:"豆腐",q:"1/2丁",m:true},{n:"味噌",q:"大さじ1.5",m:true},{n:"水",q:"400ml"},{n:"ねぎ",q:"適量"},{n:"ごま油",q:"小さじ1"}],
